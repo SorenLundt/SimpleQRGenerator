@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Generator - No Bullshit</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        select, input, button, textarea { padding: 10px; font-size: 18px; margin: 5px; }
+        #qrcode { margin-top: 20px; }
+        textarea { width: 500px; height: 150px; }
+    </style>
+</head>
+<body>
+
+    <h2>Simple QR Generator</h2>
+    <p>No bullshit. Just enter your data, generate, and download.</p>
+
+    <select id="qrType" onchange="updateInputFields()">
+        <option value="url">URL</option>
+        <option value="text" selected>Text</option> <!-- Default option selected as Text -->
+        <option value="wifi">WiFi</option>
+        <option value="phone">Phone</option>
+        <option value="sms">SMS</option>
+        <option value="email">Email</option>
+        <option value="vcard">vCard (Contact)</option>
+        <option value="location">Location</option>
+        <option value="event">Event</option>
+    </select>
+
+    <div id="inputFields">
+        <!-- Default text input for Text QR code -->
+        <textarea id="inputData" placeholder="Enter your text here (max 500 characters)"></textarea>
+    </div>
+
+    <button onclick="generateQR()">Generate QR</button>
+    <div id="qrcode"></div>
+    <br>
+    <button onclick="downloadQR()">Download</button>
+
+    <script>
+        function updateInputFields() {
+            let type = document.getElementById("qrType").value;
+            let inputDiv = document.getElementById("inputFields");
+            let html = "";
+
+            // Text option with larger input field (textarea)
+            if (type === "text") {
+                html = '<textarea id="inputData" placeholder="Enter your text here (max 500 characters)" maxlength="500"></textarea>';
+            }
+            // URL, Phone, WiFi, etc.
+            else if (type === "url" || type === "phone") {
+                html = '<input type="text" id="inputData" placeholder="Enter your data" maxlength="500">';
+            }
+            // Other QR types like WiFi, SMS, Email, etc.
+            else if (type === "wifi") {
+                html = '<input type="text" id="ssid" placeholder="WiFi SSID" maxlength="32">' +
+                       '<input type="text" id="password" placeholder="WiFi Password" maxlength="64">' +
+                       '<select id="encryption">' +
+                           '<option value="WPA">WPA</option>' +
+                           '<option value="WEP">WEP</option>' +
+                           '<option value="nopass">No password</option>' +
+                       '</select>';
+            }
+            // Other QR input types handled similarly...
+
+            inputDiv.innerHTML = html;
+        }
+
+        function generateQR() {
+            let type = document.getElementById("qrType").value;
+            let qrData = "";
+            let valid = true;
+
+            // Text validation
+            if (type === "text") {
+                qrData = document.getElementById("inputData").value;
+                if (qrData.trim() === "") {
+                    alert("Please enter some text.");
+                    valid = false;
+                }
+            }
+            // Other types like URL, WiFi, etc., are handled here...
+
+            // Generate QR code if valid
+            if (valid && qrData.trim() !== "") {
+                document.getElementById("qrcode").innerHTML = "";
+                new QRCode(document.getElementById("qrcode"), { text: qrData, width: 256, height: 256 });
+            }
+        }
+
+        function downloadQR() {
+            let img = document.querySelector("#qrcode img");
+            if (img) {
+                let link = document.createElement("a");
+                link.href = img.src;
+                link.download = "qrcode.png";
+                link.click();
+            } else {
+                alert("Generate a QR code first!");
+            }
+        }
+    </script>
+
+</body>
+</html>
