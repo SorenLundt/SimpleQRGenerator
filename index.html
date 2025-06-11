@@ -1,4 +1,3 @@
-<!-- Write your comments here -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,8 +127,8 @@
 
       <label for="size">QR Code Size:</label>
       <select id="size">
-        <option value="256">256 x 256</option>
-        <option value="512" selected>512 x 512</option>
+        <option value="256" selected>256 x 256</option>
+        <option value="512">512 x 512</option>
         <option value="1024">1024 x 1024</option>
       </select>
 
@@ -168,13 +167,13 @@
 
       switch (type) {
         case "text":
-          fields.innerHTML = textarea("text", "Text", 5);
+          fields.innerHTML = textarea("text", "Text", 10);
           break;
         case "url":
           fields.innerHTML = input("url", "URL");
           break;
         case "email":
-          fields.innerHTML = input("email", "Email") + input("subject", "Subject") + input("body", "Body");
+          fields.innerHTML = input("email", "email") + input("subject", "Subject") + textarea("body", "Body", 10);
           break;
         case "sms":
           fields.innerHTML = input("number", "Phone Number") + input("msg", "Message");
